@@ -34,6 +34,8 @@ public class Test {
         System.out.println(lengthOfLongestSubstring(str2));
         String str3="abcdefgghasdeba";  
         System.out.println(lengthOfLongestSubstring(str3));
+        String str2="abcasdebadsfdfas";  
+        System.out.println(lengthOfLongestSubstring(str4));
     }  
   
 }  
