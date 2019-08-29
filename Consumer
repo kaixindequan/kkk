@@ -1,0 +1,25 @@
+package delay;
+
+import java.util.concurrent.DelayQueue;
+
+public class Consumer implements Runnable{
+
+	private DelayQueue<Message> queue;
+	public Consumer(DelayQueue<Message> queue){
+		this.queue=queue;
+	}
+	@Override
+	public void run() {
+		while(true){
+			try {
+				Message msg = queue.take();
+				System.out.println("消费消息id:"+msg.getId()+" 消息体body:"+msg.getBody());
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+}
