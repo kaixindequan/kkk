@@ -1,0 +1,49 @@
+package delay;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.DelayQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+public class DelayQueueTest {
+
+		public static void main(String[] args) {
+			//创建延时队列
+			DelayQueue<Message> queue = new DelayQueue<>();
+			//添加延时消息
+			String dateStr1 = "2019-08-29 15:11:00";
+			String dateStr2 = "2019-08-29 15:19:00";
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Date date1;
+			Long s1 = 0L;
+			Date date2;
+			Long s2 = 0L;
+			try {
+				date1 = sdf.parse(dateStr1);
+				s1 = date1.getTime()-System.currentTimeMillis();
+				date2 = sdf.parse(dateStr2);
+				s2 = date2.getTime()-System.currentTimeMillis();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Message m1 = new Message(123,"这是第一个消息..",20000);
+			//再次添加
+			Message m2 = new Message(456,"这是第二个消息..",30000);
+			//将消息放到消息队列
+			queue.offer(m1);
+			queue.offer(m2);
+			//启动消费线程 消费添加到延时队列中的消息，前提是任务到了延时时间
+			//ThreadPoolExecutor threadPool = new ThreadPoolExecutor(2,5,0L,TimeUnit.SECONDS,new LinkedBlockingQueue<>());
+			ExecutorService threadPool1 = Executors.newFixedThreadPool(1);
+			threadPool1.execute(new Consumer(queue));
+			threadPool1.shutdown();
+			Executors.newScheduledThreadPool(5);
+		}
+}
